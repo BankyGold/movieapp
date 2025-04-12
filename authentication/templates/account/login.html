@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from flixtv.volkovdesign.com/main/signin.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Mar 2025 06:15:58 GMT -->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="{% static 'assets/css/bootstrap-reboot.min.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/bootstrap-grid.min.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/slider-radio.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/select2.min.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/plyr.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+
+	<!-- Favicons -->
+	<link rel="icon" type="image/png" href="icon/favicon-32x32.png" sizes="32x32">
+	<link rel="apple-touch-icon" href="icon/favicon-32x32.png">
+
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="author" content="Dmitry Volkov">
+	<title>Login</title>
+
+</head>
+<body>
+	<!-- sign in -->
+	<div class="sign section--full-bg" data-bg="{% static 'assets/img/bg.jpg' %}">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="sign__content">
+						<!-- authorization form -->
+						<form method="POST" action="" class="sign__form">
+                            {% csrf_token %}
+                            
+                            <a href="index.html" class="sign__logo">
+                                <img src="{% static 'assets/img/logo.svg' %}" alt="">
+                            </a>
+                        
+                            {% if errors %}
+                                <div class="bg-red-100 border border-red-400 text-white px-4 py-2 rounded-md mb-4">
+                                    <ul class="list-disc pl-5">
+                                        {% for field, error_list in errors.items %}
+                                            {% for error in error_list %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        
+                            <div class="sign__group">
+                                <input type="text" class="sign__input" placeholder="Email" 
+                                       name="username" id="id_username" required>
+                            </div>
+                        
+                            <div class="sign__group">
+                                <input type="password" class="sign__input" placeholder="Password" 
+                                       name="password" id="id_password" required>
+                            </div>
+                        
+                            <div class="sign__group sign__group--checkbox">
+                                <input id="remember" name="remember" type="checkbox" checked="checked">
+                                <label for="remember">Remember Me</label>
+                            </div>
+                        
+                            <button class="sign__btn" type="submit">Sign in</button>
+                        
+                            <span class="sign__text">Don't have an account? 
+                                <a href="{% url "auth:account_signup" %}">Sign up!</a>
+                            </span>
+                        
+                            <span class="sign__text">
+                                <a href="forgot.html">Forgot password?</a>
+                            </span>
+                        </form>
+                        
+						<!-- end authorization form -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end sign in -->
+
+	<!-- JS -->
+	<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+	<script src="{% static 'js/slider-radio.js' %}"></script>
+	<script src="{% static 'js/select2.min.js' %}"></script>
+	<script src="{% static 'js/smooth-scrollbar.js' %}"></script>
+	<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+	<script src="{% static 'js/plyr.min.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+</body>
+
+<!-- Mirrored from flixtv.volkovdesign.com/main/signin.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Mar 2025 06:15:58 GMT -->
+</html>
