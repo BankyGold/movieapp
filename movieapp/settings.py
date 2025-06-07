@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_7039la#7uzht45tmoyi*^x)#vlctns7qw8fzed5q!2wf$*n=w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'https://moviezcine.com',
@@ -35,7 +35,7 @@ ALLOWED_HOSTS = [
     ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://moviezcine.com/'
+    'https://moviezcine.com'
 ]
 
 # Application definition
