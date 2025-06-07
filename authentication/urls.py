@@ -16,7 +16,6 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path('metculture/', views.metculture, name='metculture'),
     path('login/', views.login_view, name='account_login'),
     path('signup/', views.signup_view, name='account_signup'),
     path('logout/', views.logout, name='logout'),

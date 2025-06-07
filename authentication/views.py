@@ -17,8 +17,6 @@ import requests
 import random
 import logging
 
-def metculture(request):
-    return render(request, 'metculture.html')
     
 # Create your views here.
 def login_view(request):
@@ -611,5 +609,3 @@ def dislike_comment1(request, comment_id):
         'dislikes': comment.dislikes
     })
 
-def metculture(request):
-    return render(request, 'account/met.html')
