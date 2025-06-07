@@ -95,13 +95,22 @@ class Genre(models.Model):
     class Meta:
         ordering = ['name']
     
+from django.db import models
+from django.utils.text import slugify
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import requests
+from django.core.files.base import ContentFile
+
 class Movie(models.Model):
     poster_image = models.ImageField(upload_to='posters/', blank=True, null=True)
+    poster_image_url = models.URLField(blank=True, null=True)  # New field for URL-based poster
     title = models.CharField(max_length=255)
     description = models.TextField()
     release_year = models.PositiveIntegerField()
     slug = models.SlugField(max_length=255, unique=True, blank=True)
-    running_time = models.PositiveIntegerField(help_text="Running time in minutes")
+    running_time = models.PositiveIntegerField(help_text="Running time in minutes", blank=True, null=True)
     is_indexable = models.BooleanField(default=True)
     COUNTRY_CHOICES = [
         ('Nigeria', 'Nigeria'),
@@ -116,10 +125,7 @@ class Movie(models.Model):
     rated = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     manually_added = models.BooleanField(default=True)  # Track if added manually
     views = models.ManyToManyField(User, through='MovieView', related_name='viewed_movies')
-
-    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     meta_keywords = models.CharField(max_length=255, blank=True, null=True)
     meta_description = models.CharField(max_length=160, blank=True, null=True)
 
@@ -130,9 +136,15 @@ class Movie(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.release_year})"
-    
+
+    def get_poster(self):
+        """Returns the poster image or URL, prioritizing uploaded image if available."""
+        if self.poster_image:
+            return self.poster_image.url
+        return self.poster_image_url
+
     def save(self, *args, **kwargs):
-        # Handle poster image resizing
+        # Handle poster image resizing for uploaded image
         if self.poster_image:
             img = Image.open(self.poster_image)
             output = BytesIO()
@@ -148,6 +160,28 @@ class Movie(models.Model):
                 output.tell(), 
                 None
             )
+        # Handle poster image from URL
+        elif self.poster_image_url and not self.poster_image:
+            try:
+                response = requests.get(self.poster_image_url, timeout=5)
+                if response.status_code == 200:
+                    img = Image.open(BytesIO(response.content))
+                    output = BytesIO()
+                    img = img.convert('RGB')
+                    img.thumbnail((500, 750))  # Resize
+                    img.save(output, format='JPEG', quality=85)
+                    output.seek(0)
+                    self.poster_image = InMemoryUploadedFile(
+                        output,
+                        'ImageField',
+                        f"{slugify(self.title)}_{self.release_year}.jpg",
+                        'image/jpeg',
+                        output.tell(),
+                        None
+                    )
+            except Exception as e:
+                # If URL fetch fails, keep poster_image_url as fallback, but don't halt save
+                pass
 
         # Generate slug if not present
         if not self.slug:
@@ -155,7 +189,6 @@ class Movie(models.Model):
             self.slug = base_slug
             # Handle duplicate slugs
             if Movie.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
-                # Append a unique suffix if needed (e.g., after initial save to get pk)
                 super().save(*args, **kwargs)  # Save first to get pk
                 self.slug = f"{base_slug}-{self.pk}"
                 kwargs.pop('force_insert', None)  # Avoid force_insert on second save

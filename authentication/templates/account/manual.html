@@ -222,8 +222,9 @@
                         <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                             <div class="card">
                                 <a href="{% url 'auth:movie_detail1' movie.slug %}" class="card__cover">
-                                    {% if movie.poster_image %}
-                                        <img src="{{ movie.poster_image.url }}" alt="{{ movie.title }}">
+                                    {% if movie.get_poster %}
+									<img src="{{ movie.get_poster }}" alt="{{ movie.title }} Poster" class="poster-image">
+                                        {% comment %} <img src="{{ movie.poster_image.url }}" alt="{{ movie.title }}"> {% endcomment %}
                                     {% else %}
                                         <img src="{% static 'assets/img/postal.jpg' %}" alt="No Poster Available">
                                     {% endif %}
