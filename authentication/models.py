@@ -104,7 +104,7 @@ import requests
 from django.core.files.base import ContentFile
 
 class Movie(models.Model):
-    # poster_image = models.ImageField(upload_to='posters/', blank=True, null=True)
+    poster_image = models.ImageField(upload_to='posters/', blank=True, null=True)
     poster_image_url = models.URLField(blank=True, null=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
