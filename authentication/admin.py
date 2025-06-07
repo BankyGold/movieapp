@@ -24,7 +24,10 @@ class MovieAdmin(admin.ModelAdmin):
     search_fields = ('title', 'description')
     fieldsets = (
         (None, {
-            'fields': ('title', 'description', 'release_year', 'running_time', 'country', 'genre', 'trailer_link', 'movie_link', 'rated', 'pg_rated', 'poster_image', 'manually_added')
+            'fields': ('title', 'description', 'release_year', 'poster_image', 'poster_image_url',
+        'slug', 'running_time', 'is_indexable', 'country', 'genre',
+        'trailer_link', 'movie_link', 'pg_rated', 'rated', 'manually_added',
+        'meta_keywords', 'meta_description' )
         }),
     )
     filter_horizontal = ('genre',)  # Re-enable for user-friendly multi-select
