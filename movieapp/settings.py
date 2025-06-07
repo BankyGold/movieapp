@@ -35,7 +35,7 @@ ALLOWED_HOSTS = [
     ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://www.moviezcine.com/'
+    'https://moviezcine.com/'
 ]
 
 # Application definition
