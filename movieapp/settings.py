@@ -30,6 +30,8 @@ ALLOWED_HOSTS = [
     'https://moviezcine.com',
     'moviezcine.com',
     'www.moviezcine.com',
+    ''78.47.122.153',
+    'localhost',
     '127.0.0.1'
     ]
 
