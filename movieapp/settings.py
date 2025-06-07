@@ -30,7 +30,8 @@ ALLOWED_HOSTS = [
     'https://moviezcine.com',
     'moviezcine.com',
     'www.moviezcine.com',
-    '127.0.0.1'
+    '78.47.122.153',
+    '127.0.0.1',
     ]
 
 CSRF_TRUSTED_ORIGINS = [
