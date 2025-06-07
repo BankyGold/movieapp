@@ -24,7 +24,7 @@ class MovieAdmin(admin.ModelAdmin):
     search_fields = ('title', 'description')
     fieldsets = (
         (None, {
-            'fields': ('title', 'description', 'release_year', 'poster_image_url',
+            'fields': ('title', 'description', 'release_year', 'poster_image', 'poster_image_url',
         'slug', 'running_time', 'is_indexable', 'country', 'genre',
         'trailer_link', 'movie_link', 'pg_rated', 'rated', 'manually_added',
         'meta_keywords', 'meta_description' )
