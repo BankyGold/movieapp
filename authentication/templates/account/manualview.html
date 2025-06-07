@@ -161,8 +161,8 @@
 
 	<!-- details -->
 	<section class="section section--head section--head-fixed section--gradient section--details-bg">
-        {% if movie.poster_image %}
-		<div class="section__bg" data-bg="{{ movie.poster_image.url }}"></div>
+        {% if movie.poster_image_url %}
+		<div class="section__bg" data-bg="{{ movie.poster_image_url }}"></div>
         {% else %}
         <div class="section__bg" data-bg="{% static 'assets/img/postal.jpg' %}"></div>
         {% endif %}
