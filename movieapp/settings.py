@@ -63,6 +63,7 @@ CACHES = {
     }
 }
 AUTH_USER_MODEL = 'authentication.User'
+
 AUTHENTICATION_BACKENDS = [
     # 'authentication.auth_backends.EmailAuthBackend',
     'django.contrib.auth.backends.ModelBackend'
