@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f8f8f8; }
+        h1 { color: #d9534f; font-size: 48px; }
+        p { font-size: 18px; color: #666; }
+        a { color: #0275d8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>404 - Page Not Found</h1>
+    <p>Oops! The page you're looking for doesn't exist or has been moved.</p>
+    <p><a href="{% url 'auth:home_view' %}">Return to Home</a></p>
+</body>
+</html>

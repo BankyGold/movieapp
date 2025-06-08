@@ -18,11 +18,20 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import handler400, handler403, handler404, handler500
+
+
+# Custom error handlers
+handler400 = 'authentication.views.custom_bad_request'  # 400 Bad Request
+handler403 = 'authentication.views.custom_permission_denied'  # 403 Forbidden
+handler404 = 'authentication.views.custom_page_not_found'  # 404 Not Found
+handler500 = 'authentication.views.custom_server_error'  # 500 Internal Server Error
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
     path('football/', include('football.urls')),
+    
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

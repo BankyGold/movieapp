@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f8f8f8; }
+        h1 { color: #d9534f; font-size: 48px; }
+        p { font-size: 18px; color: #666; }
+        a { color: #0275d8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>500 - Internal Server Error</h1>
+    <p>Something went wrong on our end. Our team has been notified.</p>
+    <p><a href="{% url 'auth:home_view' %}">Return to Home</a></p>
+</body>
+</html>

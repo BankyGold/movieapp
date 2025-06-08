@@ -609,3 +609,21 @@ def dislike_comment1(request, comment_id):
         'dislikes': comment.dislikes
     })
 
+
+from django.shortcuts import render
+from django.http import HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, HttpResponseServerError
+from django.template import loader
+from django.core.exceptions import PermissionDenied
+
+# Custom error views
+def custom_bad_request(request, exception):
+    return render(request, '400.html', status=400)
+
+def custom_permission_denied(request, exception):
+    return render(request, '403.html', status=403)
+
+def custom_page_not_found(request, exception):
+    return render(request, '404.html', status=404)
+
+def custom_server_error(request):
+    return render(request, '500.html', status=500)
