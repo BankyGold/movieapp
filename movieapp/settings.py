@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     
 ]
 SITE_ID = 1  # Required for sitemaps
-SITE_DOMAIN = 'https://movieapp-production-90d7.up.railway.app/'  # Replace with your actual domain
+SITE_DOMAIN = 'https://moviezcine.com'  # Replace with your actual domain
 SITE_NAME = 'MovieHub'
 
 CACHES = {
@@ -112,13 +112,23 @@ SCOREBAT_ACCESS_TOKEN = 'MjA1NDMwXzE3NDMzODM4NjZfM2RlODkyNzk2M2JiYjE0YTE5NDg1Yzl
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'Ty1SLsYzbpIan3ddU4qfakL5MDJxMS8UpLWCyib7Rm7rO2DqWa6fFyMlHwyKOo7f',
+        'HOST': 'j4swkk0og880cc48wswcc0gg',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
