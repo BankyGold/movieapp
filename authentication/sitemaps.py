@@ -26,8 +26,8 @@ class TMDBMovieSitemap(Sitemap):
     def location(self, obj):
         from django.http import HttpRequest
         request = HttpRequest()
-        request.META['SERVER_NAME'] = 'yourdomain.com'  # Replace with your domain
-        request.META['SERVER_PORT'] = '443'
+        request.META['SERVER_NAME'] = 'moviezcine.com'  # Replace with your domain
+        request.META['SERVER_PORT'] = '8000'
         request.META['wsgi.url_scheme'] = 'https'
         return request.build_absolute_uri(reverse('auth:movie_detail', args=[obj.slug]))
 
