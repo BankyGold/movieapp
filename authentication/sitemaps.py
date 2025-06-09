@@ -1,6 +1,7 @@
 from django.utils import timezone
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
+from django.contrib.sites.models import Site
 from .models import Movie, TMDBMovie
 
 class StaticSitemap(Sitemap):
@@ -11,7 +12,8 @@ class StaticSitemap(Sitemap):
         return ['home_view', 'all_movies', 'manual_movies']
 
     def location(self, item):
-        return reverse(f'auth:{item}')
+        current_site = Site.objects.get_current()
+        return f"https://{current_site.domain}{reverse(f'auth:{item}')}"
 
     def lastmod(self, item):
         return timezone.now()
@@ -24,12 +26,8 @@ class TMDBMovieSitemap(Sitemap):
         return TMDBMovie.objects.filter(is_indexable=True).order_by('tmdb_id')
 
     def location(self, obj):
-        from django.http import HttpRequest
-        request = HttpRequest()
-        request.META['SERVER_NAME'] = 'moviezcine.com'  # Replace with your domain
-        request.META['SERVER_PORT'] = '8000'
-        request.META['wsgi.url_scheme'] = 'https'
-        return request.build_absolute_uri(reverse('auth:movie_detail', args=[obj.slug]))
+        current_site = Site.objects.get_current()
+        return f"https://{current_site.domain}{reverse('auth:movie_detail', args=[obj.slug])}"
 
     def lastmod(self, obj):
         return obj.last_content_update or obj.last_updated
@@ -42,12 +40,8 @@ class ManualMovieSitemap(Sitemap):
         return Movie.objects.filter(manually_added=True, is_indexable=True).order_by('id')
 
     def location(self, obj):
-        from django.http import HttpRequest
-        request = HttpRequest()
-        request.META['SERVER_NAME'] = 'moviezcine.com'  # Replace with your domain
-        request.META['SERVER_PORT'] = '443'
-        request.META['wsgi.url_scheme'] = 'https'
-        return request.build_absolute_uri(reverse('auth:movie_detail1', args=[obj.slug]))
+        current_site = Site.objects.get_current()
+        return f"https://{current_site.domain}{reverse('auth:movie_detail1', args=[obj.slug])}"
 
     def lastmod(self, obj):
         return obj.updated_at or obj.created_at
