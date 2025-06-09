@@ -141,37 +141,30 @@ class Movie(models.Model):
         return f"{self.title} ({self.release_year})"
     
     def save(self, *args, **kwargs):
-        # Handle poster image resizing
+        self.updated_at = timezone.now()
+        if not self.meta_description:
+            self.meta_description = f"{self.description[:150]}..." if self.description else f"Watch {self.title} ({self.release_year}) on MovieHub."
+        if not self.meta_keywords:
+            genres = ', '.join(genre.name for genre in self.genre.all()) if self.genre.exists() else 'movies'
+            self.meta_keywords = f"{self.title}, {genres}, {self.country}, MovieHub"
         if self.poster_image:
             img = Image.open(self.poster_image)
             output = BytesIO()
             img = img.convert('RGB')
-            img.thumbnail((500, 750))  # Resize
+            img.thumbnail((500, 750))
             img.save(output, format='JPEG', quality=85)
             output.seek(0)
             self.poster_image = InMemoryUploadedFile(
-                output, 
-                'ImageField', 
-                f"{self.poster_image.name.split('.')[0]}.jpg",
-                'image/jpeg', 
-                output.tell(), 
-                None
+                output, 'ImageField', f"{self.poster_image.name.split('.')[0]}.jpg",
+                'image/jpeg', output.tell(), None
             )
-
-        # Generate slug if not present
         if not self.slug:
             base_slug = slugify(f"{self.title}-{self.release_year}")
             self.slug = base_slug
-            # Handle duplicate slugs
             if Movie.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
-                # Append a unique suffix if needed (e.g., after initial save to get pk)
-                super().save(*args, **kwargs)  # Save first to get pk
+                super().save(*args, **kwargs)
                 self.slug = f"{base_slug}-{self.pk}"
-                kwargs.pop('force_insert', None)  # Avoid force_insert on second save
-                super().save(*args, **kwargs)  # Save again with updated slug
-                return
-
-        # Call the parent save method
+                kwargs.pop('force_insert', None)
         super().save(*args, **kwargs)
 
 class MovieView(models.Model):
@@ -211,4 +204,8 @@ class TMDBMovie(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(f"{self.title}-{self.tmdb_id}")
+        if not self.meta_description:
+            self.meta_description = f"Explore {self.title} on MovieHub - reviews, trailers, and more."
+        if not self.meta_keywords:
+            self.meta_keywords = f"{self.title}, movie reviews, TMDB, MovieHub"
         super().save(*args, **kwargs)

@@ -74,6 +74,11 @@ AUTHENTICATION_BACKENDS = [
 # # ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # ACCOUNT_LOGIN_METHODS = {'email'}
 
+SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # If behind a proxy (e.g., Cloudflare)
+SESSION_COOKIE_SECURE = True  # Cookies only over HTTPS
+CSRF_COOKIE_SECURE = True  # CSRF cookies only over HTTPS
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
