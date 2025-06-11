@@ -246,7 +246,7 @@ def movie_detail_inner(request, movie_id, slug):
 
     # SEO metadata
     seo_title = f"{movie['title'][:40]} ({movie['release_date'][:4]}) - MovieHub"
-    seo_description = f"{movie['overview'][:120]}... Watch {movie['title']} reviews, trailers on MovieHub."
+    seo_description = f"{movie['overview'][:30]}... Watch {movie['title']} reviews, trailers on MovieHub."
     seo_keywords = f"{movie['title']}, {', '.join(g['name'] for g in movie.get('genres', []))}, movie reviews, MovieHub"
     seo_robots = 'index, follow'
 

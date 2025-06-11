@@ -23,23 +23,14 @@
 	<!-- Favicons -->
 	<link rel="icon" type="image/png" href="icon/favicon-32x32.png" sizes="32x32">
 	<link rel="apple-touch-icon" href="icon/favicon-32x32.png">
-
+	<title>{{ seo_title }}</title>
 	<meta name="description" content="{{ seo_description }}">
 	<meta name="keywords" content="{{ seo_keywords }}">
-	<meta name="robots" content="{{ seo_robots }}">
+	<meta name="robots" content="index, follow">
 	<link rel="canonical" href="{{ canonical_url }}">
 	{% if movie_schema %}
-	<script type="application/ld+json">{{ movie_list_schema|safe }}</script>
-	{% endif %}
-
-	<title>{{ seo_title }}</title>
-    {% if prev_page_url %}
-        <link rel="prev" href="{{ prev_page_url }}">
-    {% endif %}
-    {% if next_page_url %}
-        <link rel="next" href="{{ next_page_url }}">
-    {% endif %}
-
+<script type="application/ld+json">{{ movie_schema|safe }}</script>
+{% endif %}
    <meta property="og:title" content="{{ og_title }}">
 	<meta property="og:description" content="{{ og_description }}">
 	<meta property="og:image" content="{{ og_image }}">
