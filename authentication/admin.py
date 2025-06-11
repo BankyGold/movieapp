@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Comment, Movie, MovieView, Commentmovie, Genre
+from .models import User, Comment, Movie, MovieView, Commentmovie, Genre, TMDBMovie
 from django.utils import timezone
 from datetime import datetime, timedelta
 
@@ -59,3 +59,4 @@ admin.site.register(Movie, MovieAdmin)
 admin.site.register(MovieView)
 admin.site.register(Commentmovie)  # Check if this should be 'Comment' instead
 admin.site.register(Genre)
+admin.site.register(TMDBMovie)
