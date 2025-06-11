@@ -196,7 +196,7 @@ class TMDBMovie(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True)  # For lastmod in sitemap
     last_content_update = models.DateTimeField(null=True, blank=True)
-    is_indexable = models.BooleanField(default=True)
+    is_indexable = models.BooleanField(default=False)  # Changed to False
 
     meta_keywords = models.CharField(max_length=255, blank=True, null=True)
     meta_description = models.CharField(max_length=160, blank=True, null=True)

@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from django.urls import reverse
 from django.templatetags.static import static
 from django.utils.text import slugify
-from datetime import datetime
+from datetime import datetime, timezone
 import requests
 import random
 import logging
@@ -164,7 +164,18 @@ def popular_movies(request):
     popular_url = f'https://api.themoviedb.org/3/movie/popular?api_key={api_key}'
     movies = requests.get(popular_url).json().get('results', [])[:10]
     for movie in movies:
-        TMDBMovie.objects.get_or_create(tmdb_id=movie['id'], defaults={'title': movie['title']})
+        movie_obj, _ = TMDBMovie.objects.get_or_create(
+            tmdb_id=movie['id'],
+            defaults={
+                'title': movie['title'],
+                'slug': slugify(f"{movie['title']}-{movie['id']}"),
+                'is_indexable': True  # Index popular movies
+            }
+        )
+        if not movie_obj.is_indexable:
+            movie_obj.is_indexable = True
+            movie_obj.last_content_update = timezone.now()
+            movie_obj.save()
     seo_title = "Popular Movies - MovieHub"
     seo_description = "Discover the most popular movies right now on MovieHub."
     return render(request, 'account/popular.html', {
