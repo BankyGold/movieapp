@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     'www.moviezcine.com',
     '78.47.122.153',
     '127.0.0.1',
+    'localhost:800'
     ]
 
 CSRF_TRUSTED_ORIGINS = [
