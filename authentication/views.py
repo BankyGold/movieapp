@@ -138,10 +138,10 @@ def index_view(request):
         )
         movie['slug'] = movie_obj.slug  # Add slug to API data
     
-    seo_title = f"Search '{query[:20]}...' - MovieHub Movies" if query else "MovieHub - Latest 2025 Movies & Reviews"
+    seo_title = f"Search '{query[:20]}...' - MovieCine Movies" if query else "MovieCine - Latest 2025 Movies & Reviews"
     seo_description = (
-        f"Search '{query}' movies on MovieHub. Find trailers, reviews, and more." if query
-        else "Discover the latest 2025 movies, popular releases, trending films, and reviews on MovieHub."
+        f"Search '{query}' movies on MovieCine. Find trailers, reviews, and more." if query
+        else "Discover the latest movies, popular releases, trending films, and reviews on MovieCine. It is faster and easy to access."
     )
     seo_robots = 'noindex, nofollow' if query else 'index, follow'
     movie_list_schema = {
@@ -165,8 +165,8 @@ def popular_movies(request):
     movies = requests.get(popular_url).json().get('results', [])[:10]
     for movie in movies:
         TMDBMovie.objects.get_or_create(tmdb_id=movie['id'], defaults={'title': movie['title']})
-    seo_title = "Popular Movies - MovieHub"
-    seo_description = "Discover the most popular movies right now on MovieHub."
+    seo_title = "Popular Movies - MovieCine"
+    seo_description = "Discover the most popular movies right now on MovieCine."
     return render(request, 'account/popular.html', {
         'movies': movies, 'seo_title': seo_title, 'seo_description': seo_description,
         'canonical_url': request.build_absolute_uri()
@@ -178,8 +178,8 @@ def upcoming_movies(request):
     movies = requests.get(upcoming_url).json().get('results', [])[:10]
     for movie in movies:
         TMDBMovie.objects.get_or_create(tmdb_id=movie['id'], defaults={'title': movie['title']})
-    seo_title = "Upcoming Movies - MovieHub"
-    seo_description = "Check out upcoming movie releases on MovieHub."
+    seo_title = "Upcoming Movies - MovieCine"
+    seo_description = "Check out upcoming movie releases on MovieCine."
     return render(request, 'account/upcoming.html', {
         'movies': movies, 'seo_title': seo_title, 'seo_description': seo_description,
         'canonical_url': request.build_absolute_uri()
@@ -245,9 +245,9 @@ def movie_detail_inner(request, movie_id, slug):
         movie_obj.save()
 
     # SEO metadata
-    seo_title = f"{movie['title'][:40]} ({movie['release_date'][:4]}) - MovieHub"
-    seo_description = f"{movie['overview'][:30]}... Watch {movie['title']} reviews, trailers on MovieHub."
-    seo_keywords = f"{movie['title']}, {', '.join(g['name'] for g in movie.get('genres', []))}, movie reviews, MovieHub"
+    seo_title = f"{movie['title'][:40]} ({movie['release_date'][:4]})"
+    seo_description = f"{movie['overview'][:30]}... Watch {movie['title']} reviews, trailers on MovieCine."
+    seo_keywords = f"{movie['title']}, {', '.join(g['name'] for g in movie.get('genres', []))}, movie reviews, MovieCine"
     seo_robots = 'index, follow'
 
     # Structured data for Movie
@@ -407,12 +407,12 @@ def all_movies(request):
         })
     
     # SEO metadata (only index page 1)
-    seo_title = "All Movies - Latest 2025 Releases | MovieHub" if int(page) == 1 else f"All Movies Page {page} - MovieHub"
+    seo_title = "All Movies - Latest 2025 Releases"
     seo_description = (
-        "Browse all movies on MovieHub. Latest 2025 releases, classics, and more." if int(page) == 1
-        else f"Page {page} of all movies on MovieHub. Explore more releases."
+        "Browse all movies on MovieCine. Latest 2025 releases, classics, and more." if int(page) == 1
+        else f"Page {page} of all movies on MovieCine. Explore more releases."
     )
-    seo_keywords = "all movies, latest movies 2025, MovieHub" if int(page) == 1 else None
+    seo_keywords = "all movies, latest movies 2025, MovieCine" if int(page) == 1 else None
     seo_robots = 'index, follow'
 
     # Pagination links (for crawling, not indexing)
@@ -475,8 +475,8 @@ def manual_movies(request):
             'next_page': int(page) + 1
         })
 
-    seo_title = f"Local Movies - Page {page} - MovieHub"
-    seo_description = f"Explore user-uploaded local movies on MovieHub, page {page}."
+    seo_title = f"Local Movies - MovieCine"
+    seo_description = f"Explore user-uploaded local movies on MovieCine, page {page}."
     seo_robots = 'index, follow'
 
     movie_list_schema = {
@@ -517,8 +517,8 @@ def manual_movie_detail(request, slug):
     page = request.GET.get('page', 1)
     page_obj = paginator.get_page(page)
 
-    seo_title = f"{movie.title} ({movie.release_year}) - MovieHub"
-    seo_description = f"{movie.description[:150]} - User-uploaded movie on MovieHub."
+    seo_title = f"{movie.title} ({movie.release_year}) - MovieCine"
+    seo_description = f"{movie.description[:150]} - User-uploaded movie on MovieCine."
     seo_robots = 'index, follow'
     og_image = movie.poster_image.url if movie.poster_image else request.build_absolute_uri(static('assets/img/postal.jpg'))
 
