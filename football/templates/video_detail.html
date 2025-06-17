@@ -25,14 +25,13 @@
 
 	<meta name="author" content="Isaac Exousia">
 	<title>{{ seo_title }}</title>
+	<meta name="robots" content="noindex, nofollow">
     <meta name="description" content="{{ seo_description }}">
     <meta name="keywords" content="{{ seo_keywords }}">
-    <meta name="robots" content="{{ seo_robots }}">
     <link rel="canonical" href="{{ canonical_url }}">
     <script type="application/ld+json">
         {{ movie_schema|json_script:"movie-data" }}
     </script>
-
 </head>
 
 <body>
