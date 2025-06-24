@@ -59,4 +59,7 @@ admin.site.register(Movie, MovieAdmin)
 admin.site.register(MovieView)
 admin.site.register(Commentmovie)  # Check if this should be 'Comment' instead
 admin.site.register(Genre)
-admin.site.register(TMDBMovie)
+
+@admin.register(TMDBMovie)
+class TMDBMovieAdmin(admin.ModelAdmin):
+    search_fields = ['title', 'tmdb_id']
