@@ -63,3 +63,8 @@ admin.site.register(Genre)
 @admin.register(TMDBMovie)
 class TMDBMovieAdmin(admin.ModelAdmin):
     search_fields = ['title', 'tmdb_id']
+    list_display = ("title", "tmdb_id", "is_indexable", "last_updated")
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(is_indexable=False)  
