@@ -500,7 +500,8 @@ def manual_movies(request):
         'canonical_url': request.build_absolute_uri(), 'movie_list_schema': movie_list_schema
     })
 
-
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 def manual_movie_detail(request, slug):
     # Retrieve movie by slug instead of id
     movie = get_object_or_404(Movie, slug=slug)
@@ -532,10 +533,13 @@ def manual_movie_detail(request, slug):
         "genre": [genre.name for genre in movie.genre.all()] if movie.genre.exists() else ["Unknown"],
         "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": movie.views.count(),  # Replace with actual rating if available
+            "ratingValue": movie.views.count(),
             "ratingCount": movie.views.count()
         }
     }
+
+    # Convert to JSON string
+    movie_schema_json = json.dumps(movie_schema, cls=DjangoJSONEncoder, ensure_ascii=False)
 
     return render(request, 'account/manualview.html', {
         'movie': movie, 
@@ -547,7 +551,7 @@ def manual_movie_detail(request, slug):
         'seo_robots': seo_robots,
         'prev_page_url': request.build_absolute_uri(f"?page={int(page) - 1}") if page_obj.has_previous() else None,
         'next_page_url': request.build_absolute_uri(f"?page={int(page) + 1}") if page_obj.has_next() else None,
-        'movie_schema': movie_schema,
+        'movie_schema': movie_schema_json,
         'og_title': seo_title,
         'og_description': seo_description,
         'og_image': og_image,
