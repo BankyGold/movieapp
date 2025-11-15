@@ -185,6 +185,18 @@ def upcoming_movies(request):
         'canonical_url': request.build_absolute_uri()
     })
 logger = logging.getLogger(__name__)
+
+# Conditional caching: only apply in production
+def movie_detail(request, slug):
+    # Get the TMDBMovie object by slug
+    movie_obj = get_object_or_404(TMDBMovie, slug=slug)
+    movie_id = movie_obj.tmdb_id
+    # Apply caching based on movie_id
+    cache_decorator = cache_page(60 * 15, key_prefix=f"movie_detail_{movie_id}") if not settings.DEBUG else lambda x: x
+    view = cache_decorator(movie_detail_inner)(request, movie_id, slug=slug)  # Pass slug to inner function
+    return view
+
+
 def movie_detail_inner(request, movie_id, slug):
     api_key = '5ebda61e9469961821ac79b7479e5b51'
     movie_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}'
