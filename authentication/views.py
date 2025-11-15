@@ -185,18 +185,6 @@ def upcoming_movies(request):
         'canonical_url': request.build_absolute_uri()
     })
 logger = logging.getLogger(__name__)
-
-# Conditional caching: only apply in production
-def movie_detail(request, slug):
-    # Get the TMDBMovie object by slug
-    movie_obj = get_object_or_404(TMDBMovie, slug=slug)
-    movie_id = movie_obj.tmdb_id
-    # Apply caching based on movie_id
-    cache_decorator = cache_page(60 * 15, key_prefix=f"movie_detail_{movie_id}") if not settings.DEBUG else lambda x: x
-    view = cache_decorator(movie_detail_inner)(request, movie_id, slug=slug)  # Pass slug to inner function
-    return view
-
-
 def movie_detail_inner(request, movie_id, slug):
     api_key = '5ebda61e9469961821ac79b7479e5b51'
     movie_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}'
@@ -250,42 +238,65 @@ def movie_detail_inner(request, movie_id, slug):
     seo_keywords = f"{movie['title']}, {', '.join(g['name'] for g in movie.get('genres', []))}, movie reviews, MovieCine"
     seo_robots = 'index, follow'
 
-    # Structured data for Movie
+    # Structured data for Movie - Build schema without None values
     movie_schema = {
         "@context": "https://schema.org",
         "@type": "Movie",
         "name": movie['title'],
         "url": request.build_absolute_uri(),
-        "image": f"https://image.tmdb.org/t/p/w500{movie['poster_path']}" if movie.get('poster_path') else None,
-        "genre": [g['name'] for g in movie.get('genres', [])],
-        "datePublished": movie['release_date'],
-        "director": {"@type": "Person", "name": director['name']} if director else None,
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": movie['vote_average'],
-            "bestRating": "10",
-            "ratingCount": movie['vote_count']
-        } if movie.get('vote_average') else None
     }
+    
+    # Add image only if available
+    if movie.get('poster_path'):
+        movie_schema["image"] = f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
+    
+    # Add genre only if available
+    if movie.get('genres'):
+        movie_schema["genre"] = [g['name'] for g in movie.get('genres', [])]
+    
+    # Add date published only if available
+    if movie.get('release_date'):
+        movie_schema["datePublished"] = movie['release_date']
+    
+    # Add director only if available
+    if director:
+        movie_schema["director"] = {
+            "@type": "Person", 
+            "name": director['name']
+        }
+    
+    # Add rating only if available
+    if movie.get('vote_average'):
+        movie_schema["aggregateRating"] = {
+            "@type": "AggregateRating",
+            "ratingValue": float(movie['vote_average']),
+            "bestRating": "10",
+            "worstRating": "0",
+            "ratingCount": movie.get('vote_count', 0)
+        }
     
     # Video structured data (if trailer exists)
     if trailer:
-        movie_schema["video"] = {
+        movie_schema["trailer"] = {
             "@type": "VideoObject",
             "name": f"{movie['title']} Trailer",
             "description": f"Watch the official trailer for {movie['title']}.",
             "thumbnailUrl": f"https://img.youtube.com/vi/{trailer['key']}/0.jpg",
-            "contentUrl": f"https://www.youtube.com/watch?v={trailer['key']}",
-            "uploadDate": trailer.get('published_at', movie['release_date'])
+            "embedUrl": f"https://www.youtube.com/embed/{trailer['key']}",
+            "uploadDate": trailer.get('published_at', movie.get('release_date', ''))
         }
+
+    # Convert to JSON and back to ensure it's valid
+    import json
+    movie_schema_json = json.dumps(movie_schema, indent=2)
 
     return render(request, 'account/details.html', {
         'movie': movie, 'trailer': trailer, 'cast': credits.get('cast', [])[:10], 'certification': certification,
         'director': director, 'reviews': reviews, 'comments': page_obj, 'page_obj': page_obj,
         'seo_title': seo_title, 'seo_description': seo_description, 'seo_keywords': seo_keywords,
-        'seo_robots': seo_robots, 'movie_schema': movie_schema, 'canonical_url': request.build_absolute_uri(),
-        'prev_page_url': request.build_absolute_uri(f"?page={int(page_number) - 1}") if page_obj.has_previous() else None,
-        'next_page_url': request.build_absolute_uri(f"?page={int(page_number) + 1}") if page_obj.has_next() else None,
+        'seo_robots': seo_robots, 'movie_schema': movie_schema_json, 'canonical_url': request.build_absolute_uri(),
+        'prev_page_url': request.build_absolute_uri(f"?page={page_obj.previous_page_number()}") if page_obj.has_previous() else None,
+        'next_page_url': request.build_absolute_uri(f"?page={page_obj.next_page_number()}") if page_obj.has_next() else None,
     })
 
 @login_required
